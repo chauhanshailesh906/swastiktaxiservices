@@ -69,7 +69,6 @@ function Home() {
       <main>
         <section className="hero container" id="home">
           <div className="hero-copy">
-            <span className="eyebrow">Safe Ride • Comfortable Journey • Always With You</span>
             <h1>
               SWASTIK <span>TAXI SERVICES</span>
             </h1>
