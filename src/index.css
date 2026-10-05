@@ -1,0 +1,33 @@
+:root {
+  --primary-color: #646cff;
+  --text-color: #213547;
+  --background: #ffffff;
+}
+
+@media (prefers-color-scheme: light) {
+  :root {
+    --text-color: #213547;
+    --background: #ffffff;
+  }
+}
+
+@media (prefers-color-scheme: dark) {
+  :root {
+    --text-color: #f0f0f0;
+    --background: #242424;
+  }
+}
+
+body {
+  margin: 0;
+  display: flex;
+  font-family: Inter, system-ui, Avenir, Helvetica, Arial, sans-serif;
+  line-height: 1.5;
+  font-weight: 400;
+  color: var(--text-color);
+  background-color: var(--background);
+}
+
+#root {
+  width: 100%;
+}
