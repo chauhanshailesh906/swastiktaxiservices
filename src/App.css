@@ -154,13 +154,27 @@ button:hover {
 }
 
 .cta-btn.secondary {
-  background: #eaf2ff;
-  color: #17375d;
+  border: 2px solid #ffb703;
+  color: #fff;
+  background: #ffb703;
+  box-shadow: 0 0 8px rgba(255, 183, 3, 0.4);
+}
+
+.cta-btn.secondary:hover {
+  background: #ffb703;
+  color: #111;
+  box-shadow: 0 0 15px rgba(255, 183, 3, 0.7);
 }
 
 .cta-btn.whatsapp {
   background: #1ad66b;
   color: #fff;
+}
+
+.cta-btn.whatsapp:hover {
+  background: #1ad66b;
+  color: #111;
+  box-shadow: 0 0 15px rgba(255, 183, 3, 0.7);
 }
 
 .hero {
