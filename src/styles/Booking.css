@@ -22,6 +22,11 @@
   font-weight: 700;
 }
 
+.booking-home-link {
+  flex: 0 0 auto;
+  margin-bottom: 18px;
+}
+
 /* Progress Indicator */
 .progress-container {
   margin-bottom: 40px;
@@ -211,12 +216,6 @@
   color: #666;
 }
 
-.vehicle-card .price {
-  font-weight: 600;
-  color: #FFB300;
-  margin-top: 8px;
-}
-
 /* Booking Summary */
 .booking-summary {
   background: #f8f9fa;
@@ -334,6 +333,9 @@
 }
 
 .btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
   flex: 1;
   padding: 14px 20px;
   border: none;
@@ -344,6 +346,9 @@
   transition: all 0.3s ease;
   text-transform: uppercase;
   letter-spacing: 0.5px;
+  text-align: center;
+  text-decoration: none;
+  box-sizing: border-box;
 }
 
 .btn:disabled {

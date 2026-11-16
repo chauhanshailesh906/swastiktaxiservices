@@ -77,7 +77,7 @@ function Home() {
             </p>
 
             <div className="hero-actions">
-              {/* <Link to="/booking" className="cta-btn primary">Book Taxi</Link> */}
+              { <Link to="/booking" className="cta-btn primary">Book Taxi</Link> }
            <a className="cta-btn secondary" href="tel:+919456103026">Call Now</a>
               <a className="cta-btn whatsapp" href="https://wa.me/919456103026" target="_blank" rel="noreferrer">WhatsApp</a>
             </div>

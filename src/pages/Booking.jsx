@@ -1,5 +1,14 @@
 import React, { useState } from 'react';
+import { Link } from 'react-router-dom';
 import '../styles/Booking.css';
+import {
+  getBookingFare,
+  popularLocations,
+  vehicles,
+} from '../data/bookingPricing.js';
+
+const RAZORPAY_PAYMENT_URL = 'https://razorpay.me/@shaileshsinghchauhan';
+const WHATSAPP_NUMBER = '919456103026';
 
 const Booking = () => {
   const [currentStep, setCurrentStep] = useState(1);
@@ -18,22 +27,22 @@ const Booking = () => {
   });
 
   const [fareEstimate, setFareEstimate] = useState(null);
+  const [paymentStarted, setPaymentStarted] = useState(false);
 
-  const vehicles = [
-    { id: 1, name: 'Dzire (4-seater)', price: 30, capacity: 4 },
-    { id: 2, name: 'Ertiga (6-seater)', price: 40, capacity: 6 },
-  ];
-
-  const popularLocations = [
-    'Haridwar',
-    'Badrinath',
-    'Govindghat',
-    'Auli',
-    'Joshimath',
-    'Rishikesh',
-    'Mussorie',
-    'Dehradun',
-  ];
+  const selectedVehicle = vehicles.find(
+    (vehicle) => vehicle.id === Number(bookingData.vehicle)
+  );
+  const whatsappMessage = [
+    'I have completed payment on Razorpay. Please verify it and confirm my booking.',
+    `Name: ${bookingData.customerName}`,
+    `Mobile: ${bookingData.mobileNumber}`,
+    `Trip: ${bookingData.pickupLocation} to ${bookingData.dropLocation} (${bookingData.tripType})`,
+    `Date and time: ${bookingData.travelDate} at ${bookingData.pickupTime}`,
+    `Vehicle: ${selectedVehicle?.name || 'Not selected'}`,
+    `Passengers: ${bookingData.passengers}`,
+    `Estimated fare: INR ${fareEstimate?.toLocaleString('en-IN') || 'Not available'}`,
+  ].join('\n');
+  const whatsappBookingUrl = `https://wa.me/${WHATSAPP_NUMBER}?text=${encodeURIComponent(whatsappMessage)}`;
 
   const handleInputChange = (e) => {
     const { name, value } = e.target;
@@ -50,6 +59,10 @@ const Booking = () => {
           alert('Please select both pickup and drop locations');
           return false;
         }
+        if (bookingData.pickupLocation === bookingData.dropLocation) {
+          alert('Pickup and drop locations must be different');
+          return false;
+        }
         return true;
       case 2:
         if (!bookingData.travelDate || !bookingData.pickupTime) {
@@ -57,12 +70,31 @@ const Booking = () => {
           return false;
         }
         return true;
-      case 3:
+      case 3: {
         if (!bookingData.vehicle) {
           alert('Please select a vehicle');
           return false;
         }
+        const selectedVehicle = vehicles.find(
+          (vehicle) => vehicle.id === Number(bookingData.vehicle)
+        );
+        if (!selectedVehicle) {
+          alert('Please select a valid vehicle');
+          return false;
+        }
+        const passengerCount = Number(bookingData.passengers);
+        if (
+          !Number.isInteger(passengerCount) ||
+          passengerCount < 1 ||
+          passengerCount > selectedVehicle.capacity
+        ) {
+          alert(
+            `${selectedVehicle.name} can carry between 1 and ${selectedVehicle.capacity} passengers. Please adjust the passenger count.`
+          );
+          return false;
+        }
         return true;
+      }
       case 4:
         if (!bookingData.customerName || !bookingData.mobileNumber) {
           alert('Please enter your name and mobile number');
@@ -79,22 +111,18 @@ const Booking = () => {
   };
 
   const calculateFare = () => {
-    const selectedVehicle = vehicles.find((v) => v.id === parseInt(bookingData.vehicle));
-    if (!selectedVehicle) return 0;
-
-    const basePrice = selectedVehicle.price;
-    const estimatedDistance = 0; // Default 50 km for fare calculation
-    const baseFare = basePrice * estimatedDistance;
-    const tripMultiplier = bookingData.tripType === 'Round Trip' ? 2 : 1;
-
-    return baseFare * tripMultiplier;
+    return getBookingFare(bookingData);
   };
 
   const handleNext = () => {
     if (validateStep(currentStep)) {
       if (currentStep === 5) {
-        // Calculate fare on step 5
-        setFareEstimate(calculateFare());
+        const fare = calculateFare();
+        if (fare === null) {
+          alert('Fare is not available for this route');
+          return;
+        }
+        setFareEstimate(fare);
       }
       if (currentStep < 6) {
         setCurrentStep(currentStep + 1);
@@ -108,15 +136,12 @@ const Booking = () => {
     }
   };
 
-  const handleConfirmBooking = () => {
-    alert('Booking confirmed! Confirmation details have been sent to your mobile number.');
-    // Here you would send the booking data to your backend
-    console.log('Booking Data:', bookingData, 'Fare:', fareEstimate);
-  };
-
   return (
     <div className="booking-container">
       <div className="booking-card">
+        <Link to="/" className="btn btn-secondary booking-home-link">
+          &larr; Home
+        </Link>
         <h1 className="booking-title">Book Your Taxi</h1>
 
         {/* Progress Indicator */}
@@ -247,7 +272,10 @@ const Booking = () => {
                 value={bookingData.passengers}
                 onChange={handleInputChange}
                 min="1"
-                max="6"
+                max={
+                  vehicles.find((vehicle) => vehicle.id === Number(bookingData.vehicle))
+                    ?.capacity || 6
+                }
                 className="form-input"
               />
             </div>
@@ -267,7 +295,6 @@ const Booking = () => {
                   >
                     <h3>{vehicle.name}</h3>
                     <p>Capacity: {vehicle.capacity} Passengers</p>
-                    <p className="price">₹{vehicle.price}/km</p>
                   </div>
                 ))}
               </div>
@@ -381,22 +408,20 @@ const Booking = () => {
                 <h3>Estimated Fare</h3>
                 <div className="fare-breakdown">
                   <div className="fare-item">
-                    <span>Base Fare (approx. 50 km):</span>
-                    <span>₹{(fareEstimate / (bookingData.tripType === 'Round Trip' ? 2 : 1)).toFixed(2)}</span>
+                    <span>
+                      {bookingData.pickupLocation} to {bookingData.dropLocation} ({bookingData.tripType}):
+                    </span>
+                    <span>₹{fareEstimate.toLocaleString('en-IN')}</span>
                   </div>
-                  {bookingData.tripType === 'Round Trip' && (
-                    <div className="fare-item">
-                      <span>Trip Multiplier (2x for Round Trip):</span>
-                      <span>2x</span>
-                    </div>
-                  )}
                   <div className="fare-item total">
                     <span>Total Estimated Fare:</span>
-                    <span className="fare-amount">₹{fareEstimate.toFixed(2)}</span>
+                    <span className="fare-amount">
+                      ₹{fareEstimate.toLocaleString('en-IN')}
+                    </span>
                   </div>
                 </div>
                 <p className="fare-note">
-                  * This is an estimated fare based on distance. Final fare may vary based on actual distance traveled.
+                  * These are sample fares and must be confirmed before booking.
                 </p>
               </div>
             )}
@@ -407,6 +432,20 @@ const Booking = () => {
                 I agree to the terms and conditions and privacy policy
               </label>
             </div>
+            <p className="fare-note">
+              After paying, return here and send your booking details on WhatsApp.
+              Payment must be verified manually before the booking is confirmed.
+            </p>
+            {paymentStarted && (
+              <a
+                className="btn btn-success"
+                href={whatsappBookingUrl}
+                target="_blank"
+                rel="noreferrer"
+              >
+                I have paid — send payment details on WhatsApp
+              </a>
+            )}
           </div>
         )}
 
@@ -433,9 +472,15 @@ const Booking = () => {
           )}
 
           {currentStep === 6 && (
-            <button className="btn btn-success" onClick={handleConfirmBooking}>
-              Confirm Booking
-            </button>
+            <a
+              className="btn btn-success"
+              href={RAZORPAY_PAYMENT_URL}
+              target="_blank"
+              rel="noreferrer"
+              onClick={() => setPaymentStarted(true)}
+            >
+              Pay with Razorpay
+            </a>
           )}
         </div>
       </div>
