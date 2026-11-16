@@ -31,7 +31,7 @@ function Home() {
     { title: 'Haridwar', subtitle: 'Spiritual city and gateway to the Himalayas', image: '/haridwar.png' },
     { title: 'Badrinath', subtitle: 'Sacred shrine and godly pilgrimage stop', image: '/badrinath.png' },
     { title: 'Govindghat', subtitle: 'Base point for Himalayan journeys', image: '/govindghat.png' },
-    { title: 'Auli', subtitle: 'Panoramic snow-clad hill destination', image: '/auli.png' },
+    { title: 'Auli', subtitle: 'Panoramic snow-clad hill destination', image: '/auli.jpeg' },
     { title: 'Joshimath', subtitle: 'A scenic mountain town with spiritual charm', image: '/joshimath.png' }
   ];
 
