@@ -28,8 +28,6 @@ const Booking = () => {
   });
 
   const [fareEstimate, setFareEstimate] = useState(null);
-  const [paymentStarted, setPaymentStarted] = useState(false);
-
   const selectedVehicle = vehicles.find(
     (vehicle) => vehicle.id === Number(bookingData.vehicle)
   );
@@ -435,12 +433,6 @@ const Booking = () => {
               </div>
             )}
 
-            <div className="terms-check">
-              <input type="checkbox" id="terms" />
-              <label htmlFor="terms">
-                I agree to the terms and conditions and privacy policy
-              </label>
-            </div>
             <p className="fare-note">
               After paying, return here and send your booking details on WhatsApp.
               Payment must be verified manually before the booking is confirmed.
@@ -461,16 +453,14 @@ const Booking = () => {
                 On a phone, use the Pay via UPI button below.
               </p>
             </div>
-            {paymentStarted && (
-              <a
-                className="btn btn-success"
-                href={whatsappBookingUrl}
-                target="_blank"
-                rel="noreferrer"
-              >
-                I have paid — send payment details on WhatsApp
-              </a>
-            )}
+            <a
+              className="btn btn-success"
+              href={whatsappBookingUrl}
+              target="_blank"
+              rel="noreferrer"
+            >
+              I have paid — send payment details on WhatsApp
+            </a>
           </div>
         )}
 
@@ -500,7 +490,6 @@ const Booking = () => {
             <a
               className="btn btn-success"
               href={upiPaymentUrl}
-              onClick={() => setPaymentStarted(true)}
             >
               Pay via UPI
             </a>
