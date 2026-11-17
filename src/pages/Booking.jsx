@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 import { Link } from 'react-router-dom';
+import { QRCodeSVG } from 'qrcode.react';
 import '../styles/Booking.css';
 import {
   getBookingFare,
@@ -7,7 +8,7 @@ import {
   vehicles,
 } from '../data/bookingPricing.js';
 
-const RAZORPAY_PAYMENT_URL = 'https://razorpay.me/@shaileshsinghchauhan';
+const UPI_ID = '9456103026@superyes';
 const WHATSAPP_NUMBER = '919456103026';
 
 const Booking = () => {
@@ -32,8 +33,16 @@ const Booking = () => {
   const selectedVehicle = vehicles.find(
     (vehicle) => vehicle.id === Number(bookingData.vehicle)
   );
+  const upiQuery = new URLSearchParams({
+    pa: UPI_ID,
+    pn: 'Swastik Taxi Services',
+    am: String(fareEstimate ?? ''),
+    cu: 'INR',
+    tn: 'Taxi booking',
+  }).toString().replace(/\+/g, '%20');
+  const upiPaymentUrl = `upi://pay?${upiQuery}`;
   const whatsappMessage = [
-    'I have completed payment on Razorpay. Please verify it and confirm my booking.',
+    'I have completed payment through UPI. Please verify it and confirm my booking.',
     `Name: ${bookingData.customerName}`,
     `Mobile: ${bookingData.mobileNumber}`,
     `Trip: ${bookingData.pickupLocation} to ${bookingData.dropLocation} (${bookingData.tripType})`,
@@ -436,6 +445,22 @@ const Booking = () => {
               After paying, return here and send your booking details on WhatsApp.
               Payment must be verified manually before the booking is confirmed.
             </p>
+            <div className="upi-payment">
+              <p>On a desktop, scan this QR code with any UPI app:</p>
+              <QRCodeSVG
+                className="upi-qr"
+                value={upiPaymentUrl}
+                size={200}
+                level="M"
+                title="UPI payment QR code"
+              />
+              <p className="upi-id">
+                UPI ID: <strong>{UPI_ID}</strong>
+              </p>
+              <p className="fare-note">
+                On a phone, use the Pay via UPI button below.
+              </p>
+            </div>
             {paymentStarted && (
               <a
                 className="btn btn-success"
@@ -474,12 +499,10 @@ const Booking = () => {
           {currentStep === 6 && (
             <a
               className="btn btn-success"
-              href={RAZORPAY_PAYMENT_URL}
-              target="_blank"
-              rel="noreferrer"
+              href={upiPaymentUrl}
               onClick={() => setPaymentStarted(true)}
             >
-              Pay with Razorpay
+              Pay via UPI
             </a>
           )}
         </div>

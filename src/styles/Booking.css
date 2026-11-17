@@ -304,6 +304,35 @@
   font-style: italic;
 }
 
+.upi-payment {
+  margin: 20px 0;
+  padding: 20px;
+  border: 1px solid #e0e0e0;
+  border-radius: 8px;
+  background: #f8f9fa;
+  text-align: center;
+}
+
+.upi-payment > p:first-child {
+  margin-top: 0;
+  color: #0d1f3d;
+  font-weight: 600;
+}
+
+.upi-qr {
+  display: block;
+  max-width: 100%;
+  margin: 0 auto;
+  padding: 10px;
+  border-radius: 8px;
+  background: white;
+}
+
+.upi-id {
+  margin-bottom: 0;
+  color: #0d1f3d;
+}
+
 /* Terms Check */
 .terms-check {
   display: flex;
