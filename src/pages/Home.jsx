@@ -72,6 +72,11 @@ function Home() {
   ];
 
   const faqs = [
+    {
+      question: 'Can I book a taxi from Joshimath to Auli or Badrinath?',
+      answer:
+        'Yes. Select Joshimath and your destination in the booking form to view an estimated one-way or round-trip fare. Contact us to confirm vehicle availability and the final fare before travel.',
+    },
     { question: 'Do you provide one-way and round-trip taxi services?', answer: 'Yes, we offer both one-way and round-trip bookings for popular routes and local travel.' },
     { question: 'Are your drivers experienced for hill routes?', answer: 'Yes, our drivers are experienced and familiar with Himalayan roads and mountain travel conditions.' },
     { question: 'Can I book for family or group travel?', answer: 'Yes, we provide comfortable options like Ertiga for family and group journeys.' },
@@ -153,6 +158,20 @@ function Home() {
               <li>Safe and reliable service</li>
               <li>Transparent and fair pricing</li>
             </ul>
+          </div>
+        </section>
+
+        <section className="destination-section container" id="joshimath-taxi">
+          <div className="section-heading">
+            <span>Taxi service in Joshimath</span>
+            <h2>Book a Joshimath taxi to Auli, Badrinath or Govindghat</h2>
+          </div>
+          <p>
+            Swastik Taxi Services offers one-way and round-trip bookings for listed routes from Joshimath, including Auli, Badrinath, Govindghat and Rishikesh. Choose your route and vehicle in the booking form to see an estimated fare. Call or WhatsApp us to confirm availability and the final fare before your journey.
+          </p>
+          <div className="hero-actions">
+            <Link to="/booking" className="cta-btn primary">Check Route Fare</Link>
+            <a className="cta-btn secondary" href="tel:+919456103026">Call to Confirm</a>
           </div>
         </section>
 
