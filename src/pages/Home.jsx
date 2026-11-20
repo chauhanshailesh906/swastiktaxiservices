@@ -1,4 +1,34 @@
 import { Link } from 'react-router-dom';
+import SEO from '../SEO';
+
+const SITE_URL = `https://chauhanshailesh906.github.io${import.meta.env.BASE_URL.replace(/\/$/, '')}`;
+const publicAsset = (filename) => `${import.meta.env.BASE_URL}${filename}`;
+
+const businessStructuredData = {
+  '@context': 'https://schema.org',
+  '@type': 'LocalBusiness',
+  name: 'Swastik Taxi Services',
+  url: `${SITE_URL}/`,
+  image: publicAsset('logo.png'),
+  telephone: '+91-94561-03026',
+  description:
+    'Taxi service for one-way and round-trip travel in Joshimath, Auli, Badrinath, Rishikesh and across Uttarakhand.',
+  openingHours: 'Mo-Su 00:00-23:59',
+  areaServed: [
+    'Joshimath',
+    'Auli',
+    'Badrinath',
+    'Rishikesh',
+    'Haridwar',
+    'Govindghat',
+    'Uttarakhand',
+  ].map((name) => ({ '@type': 'Place', name })),
+  contactPoint: {
+    '@type': 'ContactPoint',
+    telephone: '+91-94561-03026',
+    contactType: 'reservations',
+  },
+};
 
 function Home() {
   const isAuthenticated = localStorage.getItem('token') !== null;
@@ -16,8 +46,8 @@ function Home() {
   ];
 
   const fleet = [
-    { name: 'Dzire', seats: '4 Seats', details: 'Perfect for solo and couple travel', image: '/dzire.png' },
-    { name: 'Ertiga', seats: '6 Seats', details: 'Comfortable for family and group travel', image: '/ertiga.png' }
+    { name: 'Dzire', seats: '4 Seats', details: 'Perfect for solo and couple travel', image: 'dzire.png' },
+    { name: 'Ertiga', seats: '6 Seats', details: 'Comfortable for family and group travel', image: 'ertiga.png' }
   ];
 
   const reasons = [
@@ -28,11 +58,11 @@ function Home() {
   ];
 
   const destinations = [
-    { title: 'Haridwar', subtitle: 'Spiritual city and gateway to the Himalayas', image: '/haridwar.png' },
-    { title: 'Badrinath', subtitle: 'Sacred shrine and godly pilgrimage stop', image: '/badrinath.png' },
-    { title: 'Govindghat', subtitle: 'Base point for Himalayan journeys', image: '/govindghat.png' },
-    { title: 'Auli', subtitle: 'Panoramic snow-clad hill destination', image: '/auli.jpeg' },
-    { title: 'Joshimath', subtitle: 'A scenic mountain town with spiritual charm', image: '/joshimath.png' }
+    { title: 'Haridwar', subtitle: 'Spiritual city and gateway to the Himalayas', image: 'haridwar.png' },
+    { title: 'Badrinath', subtitle: 'Sacred shrine and godly pilgrimage stop', image: 'badrinath.png' },
+    { title: 'Govindghat', subtitle: 'Base point for Himalayan journeys', image: 'govindghat.png' },
+    { title: 'Auli', subtitle: 'Panoramic snow-clad hill destination', image: 'auli.jpeg' },
+    { title: 'Joshimath', subtitle: 'A scenic mountain town with spiritual charm', image: 'joshimath.png' }
   ];
 
   const reviews = [
@@ -50,9 +80,15 @@ function Home() {
 
   return (
     <div className="home-page">
+      <SEO
+        title="Taxi in Joshimath, Auli & Badrinath | Swastik"
+        description="Book reliable taxi service in Joshimath, Auli, Badrinath, Rishikesh and across Uttarakhand. One-way and round-trip rides. Call Swastik Taxi Services."
+        canonicalPath="/"
+        structuredData={businessStructuredData}
+      />
       <header className="topbar container">
         <div className="brand-header">
-          <img src="/logo.png" alt="Swastik Taxi Services" className="brand-logo" />
+          <img src={publicAsset('logo.png')} alt="Swastik Taxi Services" className="brand-logo" />
         </div>
 
         <nav className="main-nav">
@@ -70,10 +106,10 @@ function Home() {
         <section className="hero container" id="home">
           <div className="hero-copy">
             <h1>
-              SWASTIK <span>TAXI SERVICES</span>
+              Taxi Service in <span>Joshimath, Auli &amp; Badrinath</span>
             </h1>
             <p>
-              Your Travel Partner in Uttarakhand. Trusted taxi service for Haridwar, Badrinath, Govindghat, Auli, Joshimath and all local and outstation trips.
+              Swastik Taxi Services is your travel partner in Uttarakhand. Book trusted rides for Haridwar, Badrinath, Govindghat, Auli, Joshimath and local or outstation trips.
             </p>
 
             <div className="hero-actions">
@@ -150,7 +186,7 @@ function Home() {
           <div className="fleet-grid">
             {fleet.map((car) => (
               <div className="fleet-card" key={car.name}>
-                <img src={car.image} alt={car.name} className="car-icon" />
+                <img src={publicAsset(car.image)} alt={car.name} className="car-icon" />
                 <h3>{car.name}</h3>
                 <p className="seats">{car.seats}</p>
                 <p>{car.details}</p>
@@ -186,7 +222,7 @@ function Home() {
             {destinations.map((place) => (
               <div className="destination-card" key={place.title}>
                 <div className="destination-image">
-                  <img src={place.image} alt={place.title} className="destination-icon" />
+                  <img src={publicAsset(place.image)} alt={place.title} className="destination-icon" />
                 </div>
                 <div className="destination-text">
                   <h3>{place.title}</h3>

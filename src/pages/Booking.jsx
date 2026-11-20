@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import { Link } from 'react-router-dom';
 import { QRCodeSVG } from 'qrcode.react';
+import SEO from '../SEO';
 import '../styles/Booking.css';
 import {
   getBookingFare,
@@ -145,6 +146,11 @@ const Booking = () => {
 
   return (
     <div className="booking-container">
+      <SEO
+        title="Book a Taxi | Swastik Taxi Services"
+        description="Request a one-way or round-trip taxi with Swastik Taxi Services for Uttarakhand travel."
+        noindex
+      />
       <div className="booking-card">
         <Link to="/" className="btn btn-secondary booking-home-link">
           &larr; Home
