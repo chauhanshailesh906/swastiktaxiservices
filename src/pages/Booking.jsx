@@ -152,6 +152,14 @@ const Booking = () => {
         noindex
       />
       <div className="booking-card">
+        <Link
+          to="/"
+          className="booking-close"
+          aria-label="Close booking and return home"
+          title="Return to home"
+        >
+          &times;
+        </Link>
         <Link to="/" className="btn btn-secondary booking-home-link">
           &larr; Home
         </Link>
