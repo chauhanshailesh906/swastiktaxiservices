@@ -24,18 +24,21 @@ const Booking = () => {
     tripType: 'One Way',
     customerName: '',
     mobileNumber: '',
-    email: '',
-    specialInstructions: '',
+    userOffer: '',
   });
 
   const [fareEstimate, setFareEstimate] = useState(null);
+  const [paymentConfirmed, setPaymentConfirmed] = useState(false);
+  const [fareChoice, setFareChoice] = useState('');
   const selectedVehicle = vehicles.find(
     (vehicle) => vehicle.id === Number(bookingData.vehicle)
   );
+  const userOfferAmount = Number(bookingData.userOffer);
+  const paymentAmount = fareEstimate;
   const upiQuery = new URLSearchParams({
     pa: UPI_ID,
     pn: 'Swastik Taxi Services',
-    am: String(fareEstimate ?? ''),
+    am: String(paymentAmount ?? ''),
     cu: 'INR',
     tn: 'Taxi booking',
   }).toString().replace(/\+/g, '%20');
@@ -49,8 +52,20 @@ const Booking = () => {
     `Vehicle: ${selectedVehicle?.name || 'Not selected'}`,
     `Passengers: ${bookingData.passengers}`,
     `Estimated fare: INR ${fareEstimate?.toLocaleString('en-IN') || 'Not available'}`,
+    `Accepted fare: INR ${paymentAmount?.toLocaleString('en-IN') || 'Not available'}`,
   ].join('\n');
   const whatsappBookingUrl = `https://wa.me/${WHATSAPP_NUMBER}?text=${encodeURIComponent(whatsappMessage)}`;
+  const counterOfferMessage = [
+    'I would like to make a counter offer for my taxi booking.',
+    `Name: ${bookingData.customerName}`,
+    `Mobile: ${bookingData.mobileNumber}`,
+    `Trip: ${bookingData.pickupLocation} to ${bookingData.dropLocation} (${bookingData.tripType})`,
+    `Date and time: ${bookingData.travelDate} at ${bookingData.pickupTime}`,
+    `Vehicle: ${selectedVehicle?.name || 'Not selected'}`,
+    `Estimated fare: INR ${fareEstimate?.toLocaleString('en-IN') || 'Not available'}`,
+    `My offer: INR ${bookingData.userOffer || 'Not provided'}`,
+  ].join('\n');
+  const counterOfferUrl = `https://wa.me/${WHATSAPP_NUMBER}?text=${encodeURIComponent(counterOfferMessage)}`;
 
   const handleInputChange = (e) => {
     const { name, value } = e.target;
@@ -350,30 +365,6 @@ const Booking = () => {
                 className="form-input"
               />
             </div>
-
-            <div className="form-group">
-              <label>Email (Optional)</label>
-              <input
-                type="email"
-                name="email"
-                value={bookingData.email}
-                onChange={handleInputChange}
-                placeholder="Enter your email"
-                className="form-input"
-              />
-            </div>
-
-            <div className="form-group">
-              <label>Special Instructions (Optional)</label>
-              <textarea
-                name="specialInstructions"
-                value={bookingData.specialInstructions}
-                onChange={handleInputChange}
-                placeholder="Any special requests or instructions..."
-                className="form-input"
-                rows="4"
-              ></textarea>
-            </div>
           </div>
         )}
 
@@ -426,55 +417,136 @@ const Booking = () => {
             <h2>Fare Estimate & Confirmation</h2>
             {fareEstimate !== null && (
               <div className="fare-card">
-                <h3>Estimated Fare</h3>
+                <div className="fare-card-heading">
+                  <h3>Estimated Fare</h3>
+                  <span className="fare-status">For review</span>
+                </div>
                 <div className="fare-breakdown">
-                  <div className="fare-item">
-                    <span>
-                      {bookingData.pickupLocation} to {bookingData.dropLocation} ({bookingData.tripType}):
-                    </span>
-                    <span>₹{fareEstimate.toLocaleString('en-IN')}</span>
+                  <p className="fare-route">
+                    {bookingData.pickupLocation} to {bookingData.dropLocation}
+                  </p>
+                  <div className="fare-comparison">
+                    <div>
+                      <span>Our Fare</span>
+                      <strong>₹{fareEstimate.toLocaleString('en-IN')}</strong>
+                    </div>
+                    <div>
+                      <span>Your Offer</span>
+                      <strong className="user-offer-value">
+                        {bookingData.userOffer
+                          ? `₹${userOfferAmount.toLocaleString('en-IN')}`
+                          : 'Not entered'}
+                      </strong>
+                    </div>
                   </div>
-                  <div className="fare-item total">
-                    <span>Total Estimated Fare:</span>
-                    <span className="fare-amount">
-                      ₹{fareEstimate.toLocaleString('en-IN')}
-                    </span>
+                  <div className="fare-offer">
+                    <label htmlFor="userOffer">Your Offer (Optional)</label>
+                    <div className="fare-offer-input">
+                      <span>₹</span>
+                      <input
+                        id="userOffer"
+                        type="number"
+                        name="userOffer"
+                        min="1"
+                        step="1"
+                        value={bookingData.userOffer}
+                        onChange={handleInputChange}
+                        placeholder="Enter your offer"
+                        className="form-input"
+                      />
+                    </div>
                   </div>
                 </div>
                 <p className="fare-note">
-                  * These are sample fares and must be confirmed before booking.
+                  Accept our fare to continue, or send your offer for confirmation.
                 </p>
+                <div className="fare-actions">
+                  <button
+                    type="button"
+                    className="btn btn-primary"
+                    onClick={() => setFareChoice('accepted')}
+                  >
+                    Accept ₹{fareEstimate.toLocaleString('en-IN')}
+                  </button>
+                  <a
+                    className={`btn btn-secondary fare-counter-btn ${userOfferAmount > 0 ? '' : 'btn-disabled'}`}
+                    href={counterOfferUrl}
+                    target="_blank"
+                    rel="noreferrer"
+                    aria-disabled={userOfferAmount <= 0}
+                    onClick={(event) => {
+                      if (userOfferAmount <= 0) {
+                        event.preventDefault();
+                        alert('Please enter your offer before sending it.');
+                      } else {
+                        setFareChoice('counter');
+                      }
+                    }}
+                  >
+                    Send My Offer
+                  </a>
+                </div>
               </div>
             )}
 
-            <p className="fare-note">
-              After paying, return here and send your booking details on WhatsApp.
-              Payment must be verified manually before the booking is confirmed.
-            </p>
-            <div className="upi-payment">
-              <p>On a desktop, scan this QR code with any UPI app:</p>
-              <QRCodeSVG
-                className="upi-qr"
-                value={upiPaymentUrl}
-                size={200}
-                level="M"
-                title="UPI payment QR code"
-              />
-              <p className="upi-id">
-                UPI ID: <strong>{UPI_ID}</strong>
-              </p>
-              <p className="fare-note">
-                On a phone, use the Pay via UPI button below.
-              </p>
-            </div>
-            <a
-              className="btn btn-success"
-              href={whatsappBookingUrl}
-              target="_blank"
-              rel="noreferrer"
-            >
-              I have paid — send payment details on WhatsApp
-            </a>
+            {fareChoice === 'counter' && (
+              <div className="offer-status">
+                <strong>Offer sent for review</strong>
+                <p>Wait for confirmation on WhatsApp before making a payment.</p>
+              </div>
+            )}
+
+            {fareChoice === 'accepted' && (
+              <div className="payment-confirmation">
+                <h3>Payment Confirmation</h3>
+                <p className="payment-amount">
+                  Confirmed amount: <strong>₹{paymentAmount?.toLocaleString('en-IN') || 'Not available'}</strong>
+                </p>
+                <div className="upi-payment">
+                  <p>Scan with any UPI app</p>
+                  <QRCodeSVG
+                    className="upi-qr"
+                    value={upiPaymentUrl}
+                    size={180}
+                    level="M"
+                    title="UPI payment QR code"
+                  />
+                  <p className="upi-id">
+                    UPI ID: <strong>{UPI_ID}</strong>
+                  </p>
+                  <a className="btn btn-primary mobile-pay-button" href={upiPaymentUrl}>
+                    Pay via UPI
+                  </a>
+                </div>
+
+                <div className="terms-check">
+                  <input
+                    id="paymentConfirmed"
+                    type="checkbox"
+                    checked={paymentConfirmed}
+                    onChange={(e) => setPaymentConfirmed(e.target.checked)}
+                  />
+                  <label htmlFor="paymentConfirmed">
+                    I confirm that I have completed the payment.
+                  </label>
+                </div>
+                <a
+                  className={`btn btn-success ${!paymentConfirmed ? 'btn-disabled' : ''}`}
+                  href={whatsappBookingUrl}
+                  target="_blank"
+                  rel="noreferrer"
+                  aria-disabled={!paymentConfirmed}
+                  onClick={(event) => {
+                    if (!paymentConfirmed) {
+                      event.preventDefault();
+                      alert('Please confirm that you have paid.');
+                    }
+                  }}
+                >
+                  Send Payment Details on WhatsApp
+                </a>
+              </div>
+            )}
           </div>
         )}
 
@@ -498,15 +570,6 @@ const Booking = () => {
             <button className="btn btn-primary" onClick={handleNext}>
               View Fare Estimate
             </button>
-          )}
-
-          {currentStep === 6 && (
-            <a
-              className="btn btn-success"
-              href={upiPaymentUrl}
-            >
-              Pay via UPI
-            </a>
           )}
         </div>
       </div>

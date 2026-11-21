@@ -326,6 +326,150 @@
   color: #FF8A00 !important;
 }
 
+.fare-card-heading {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 10px;
+}
+
+.fare-status {
+  padding: 5px 9px;
+  border-radius: 999px;
+  background: #fff4d6;
+  color: #9a6500;
+  font-size: 12px;
+  font-weight: 700;
+}
+
+.fare-route {
+  margin: 0 0 12px;
+  color: #666;
+  font-size: 13px;
+}
+
+.fare-comparison {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 10px;
+  margin-bottom: 14px;
+}
+
+.fare-comparison > div {
+  display: flex;
+  flex-direction: column;
+  gap: 5px;
+  padding: 12px;
+  border: 1px solid #eee;
+  border-radius: 6px;
+  background: #fafafa;
+}
+
+.fare-comparison span {
+  color: #777;
+  font-size: 12px;
+  font-weight: 600;
+}
+
+.fare-comparison strong {
+  color: #0d1f3d;
+  font-size: 20px;
+}
+
+.fare-comparison .user-offer-value {
+  color: #c97800;
+}
+
+.fare-offer {
+  margin-top: 12px;
+  padding-top: 12px;
+  border-top: 1px solid #eee;
+}
+
+.fare-offer label {
+  display: block;
+  margin-bottom: 8px;
+  color: #0d1f3d;
+  font-weight: 600;
+  font-size: 14px;
+}
+
+.fare-offer-input {
+  display: flex;
+  align-items: center;
+  border: 1px solid #ccc;
+  border-radius: 6px;
+  background: white;
+  overflow: hidden;
+}
+
+.fare-offer-input > span {
+  padding: 0 12px;
+  color: #0d1f3d;
+  font-weight: 700;
+}
+
+.fare-offer-input .form-input {
+  border: none;
+  border-radius: 0;
+  margin: 0;
+}
+
+.fare-actions {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 10px;
+  margin-top: 16px;
+}
+
+.fare-actions .btn {
+  min-height: 48px;
+  padding: 10px 12px;
+  font-size: 13px;
+}
+
+.fare-counter-btn {
+  border: 2px solid #d8d8d8;
+}
+
+.offer-status {
+  margin-bottom: 20px;
+  padding: 16px;
+  border: 1px solid #9bd4ad;
+  border-radius: 8px;
+  background: #effaf3;
+  color: #20783a;
+}
+
+.offer-status p {
+  margin: 5px 0 0;
+  color: #4d7658;
+  font-size: 13px;
+}
+
+.payment-confirmation {
+  margin-bottom: 20px;
+  padding: 20px;
+  border: 2px solid #e0e0e0;
+  border-radius: 8px;
+  background: #fff;
+}
+
+.payment-confirmation h3 {
+  margin-top: 0;
+  color: #0d1f3d;
+}
+
+.payment-amount {
+  margin: 10px 0;
+  color: #666;
+}
+
+.payment-amount strong {
+  color: #FF8A00;
+  font-size: 20px;
+}
+
 .fare-note {
   margin-top: 15px;
   font-size: 12px;
@@ -360,6 +504,11 @@
 .upi-id {
   margin-bottom: 0;
   color: #0d1f3d;
+}
+
+.mobile-pay-button {
+  width: 100%;
+  margin-top: 12px;
 }
 
 /* Terms Check */
@@ -446,6 +595,14 @@
   box-shadow: 0 6px 12px rgba(40, 167, 69, 0.4);
 }
 
+.btn-disabled,
+.btn-disabled:hover {
+  opacity: 0.55;
+  cursor: not-allowed;
+  transform: none;
+  box-shadow: none;
+}
+
 /* Responsive Design */
 @media (max-width: 768px) {
   .booking-card {
@@ -500,5 +657,19 @@
   .btn {
     padding: 12px 15px;
     font-size: 14px;
+  }
+
+  .fare-comparison,
+  .fare-actions {
+    grid-template-columns: 1fr;
+  }
+
+  .upi-payment {
+    padding: 15px 10px;
+  }
+
+  .upi-qr {
+    width: 170px !important;
+    height: 170px !important;
   }
 }
