@@ -11,14 +11,14 @@ test('calculates the configured Haridwar-Auli fares for both vehicles', () => {
   };
 
   assert.equal(getBookingFare(booking), 9000);
-  assert.equal(getBookingFare({ ...booking, vehicle: '2' }), 11000);
+  assert.equal(getBookingFare({ ...booking, vehicle: '2' }), 10000);
   assert.equal(
     getBookingFare({ ...booking, tripType: 'Round Trip', vehicle: '1' }),
     14000
   );
   assert.equal(
     getBookingFare({ ...booking, tripType: 'Round Trip', vehicle: '2' }),
-    16000
+    15000
   );
 });
 
