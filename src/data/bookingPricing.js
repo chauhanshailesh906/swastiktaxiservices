@@ -8,6 +8,13 @@ export const popularLocations = [
   'Dehradun',
 ];
 
+export const pickupLocations = [
+  'Badrinath',
+  'Govindghat',
+  'Auli',
+  'Joshimath',
+];
+
 export const vehicles = [
   { id: 1, name: 'Dzire (4-seater)', capacity: 4, fareAdjustment: 0 },
   { id: 2, name: 'Ertiga (6-seater)', capacity: 6, fareAdjustment: 2000 },

@@ -5,6 +5,7 @@ import SEO from '../SEO';
 import '../styles/Booking.css';
 import {
   getBookingFare,
+  pickupLocations,
   popularLocations,
   vehicles,
 } from '../data/bookingPricing.js';
@@ -218,7 +219,7 @@ const Booking = () => {
                 className="form-input"
               >
                 <option value="">Choose pickup location</option>
-                {popularLocations.map((loc) => (
+                {pickupLocations.map((loc) => (
                   <option key={loc} value={loc}>
                     {loc}
                   </option>
